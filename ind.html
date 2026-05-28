@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台北旅遊景點介紹</title>
+    <style>
+        html {
+            scroll-behavior: smooth; /* 平滑滾動效果 */
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* 導覽列 */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #e74c3c;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-menu li {
+            margin-left: 20px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #e74c3c;
+        }
+
+        /* 區塊通用樣式 */
+        section {
+            padding: 140px 20px 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 40px;
+            position: relative;
+            color: #2c3e50;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: #e74c3c;
+            margin: 10px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* 英雄橫幅 (Hero Banner) */
+        #home {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1552914397-3932e67df146?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+            max-width: 100%;
+        }
+
+        #home h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #home p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+        }
+
+        /* 熱門景點區塊 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-img {
+            min-height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .card-content p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #f1c40f;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 推薦行程區塊 */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* 小貼士區塊 */
+        .highlight-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .highlight-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .highlight-box li {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .highlight-box li:last-child {
+            border-bottom: none;
+        }
+
+        /* 聯絡我們區塊 */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .contact-form button {
+            width: 100%;
+            background: #e74c3c;
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .contact-form button:hover {
+            background: #c0392b;
+        }
+
+        /* 頁尾 */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        /* 響應式 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none; /* 簡化範例，手機端暫時隱藏，實際可加 JavaScript 漢堡選單 */
+            }
+            #home h1 {
+                font-size: 32px;
+            }
+            #home p {
+                font-size: 16px;
+            }
+            section {
+                padding-top: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a class="logo" href="#home">台北<span>漫遊</span></a>
+            <ul class="nav-menu">
+                <li><a href="#attractions">熱門景點</a></li>
+                <li><a href="#plan">行程推薦</a></li>
+                <li><a href="#tips">旅遊小貼士</a></li>
+                <li><a href="#contact">聯絡我們</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section id="home">
+            <h1>探索台北的經典景點</h1>
+            <p>從夜市小吃到文化古蹟，這裡有最完整的台北旅遊推薦，讓你一次玩遍大稻埕、信義區、九份老街與台北101。</p>
+            <a class="btn" href="#attractions">立即出發</a>
+        </section>
+
+        <section id="attractions">
+            <h2 class="section-title">熱門景點推薦</h2>
+            <div class="grid-container">
+                <article class="card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="card-content">
+                        <h3>台北101</h3>
+                        <p>台灣地標、高空觀景台與豪華商場，夜晚煙火與霓虹燈是最經典的打卡景點。</p>
+                        <span class="tag">信義區</span>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="card-content">
+                        <h3>士林夜市</h3>
+                        <p>台北最受歡迎夜市之一，小吃種類豐富，臭豆腐、雞排、珍珠奶茶都不能錯過。</p>
+                        <span class="tag">士林區</span>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="card-content">
+                        <h3>故宮博物院</h3>
+                        <p>收藏豐富文物與藝術品，了解中華文化歷史的最佳地點，適合博物館愛好者。</p>
+                        <span class="tag">士林區</span>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1526481280691-3bfa7568e1b7?auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="card-content">
+                        <h3>九份老街</h3>
+                        <p>懷舊山城風情、茶坊與老街小吃，推薦在黃昏時分登山賞景與拍照。</p>
+                        <span class="tag">新北市</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="plan">
+            <h2 class="section-title">推薦行程</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>天數</th>
+                            <th>行程建議</th>
+                            <th>重點提醒</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>第 1 天</td>
+                            <td>台北101 → 信義商圈 → 饒河街夜市</td>
+                            <td>適合逛街、拍照與品嘗小吃。</td>
+                        </tr>
+                        <tr>
+                            <td>第 2 天</td>
+                            <td>故宮博物院 → 士林官邸 → 士林夜市</td>
+                            <td>預留足夠時間參觀與休息。</td>
+                        </tr>
+                        <tr>
+                            <td>第 3 天</td>
+                            <td>台北車站 → 西門町 → 九份老街</td>
+                            <td>搭乘平溪線或客運，山路多彎。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2 class="section-title">旅遊小貼士</h2>
+            <div class="highlight-box">
+                <ul>
+                    <li>建議使用悠遊卡搭乘捷運與公車，快速又方便。</li>
+                    <li>台北天氣變化大，請攜帶雨具與輕便外套。</li>
+                    <li>熱門景點週末人潮多，平日出遊更舒適。</li>
+                    <li>夜市美食份量大，可與朋友共享多樣小吃。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">聯絡我們</h2>
+            <div class="contact-form">
+                <form>
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name" name="name" placeholder="輸入你的名字" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">電子郵件</label>
+                        <input type="email" id="email" name="email" placeholder="輸入你的 email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="message">留言內容</label>
+                        <textarea id="message" name="message" rows="5" placeholder="告訴我們你的旅遊需求"></textarea>
+                    </div>
+                    <button type="button">送出訊息</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 台北旅遊推薦｜單頁旅遊介紹網站</p>
+    </footer>
+</body>
+</html>
